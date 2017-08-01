@@ -1,0 +1,25 @@
+# Default values for external-dns.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+strategy:
+  type: Recreate
+tolerations:
+- effect: NoSchedule
+  key: node-role.kubernetes.io/master
+image:
+  repository: registry.opensource.zalan.do/teapot/external-dns
+  tag: v0.4.0
+  pullPolicy: Always
+nodeSelector:
+  node-role.kubernetes.io/master: ""
+controller:
+  domain: k8s.dshmelev.net
+  provider: aws
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

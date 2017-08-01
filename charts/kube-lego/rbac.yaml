@@ -1,0 +1,43 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kube-lego
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs:
+  - get
+  - watch
+  - list
+  - create
+  - update
+  - patch
+- apiGroups: [""]
+  resources: ["services"]
+  verbs:
+  - get
+  - create
+  - delete
+- apiGroups: ["extensions"]
+  resources: ["ingresses"]
+  verbs:
+  - get
+  - delete
+  - watch
+  - list
+  - create
+  - update
+  - patch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kube-lego-binding
+roleRef:
+  kind: ClusterRole
+  name: kube-lego
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kube-lego

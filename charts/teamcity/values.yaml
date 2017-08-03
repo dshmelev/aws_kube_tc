@@ -9,8 +9,19 @@ image:
 service:
   name: teamcity-server
   type: ClusterIP
-  externalPort: 8111
-  internalPort: 8111
+  servicePort: 8111
+persistentVolume:
+  enabled: true
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  ## If defined, PVC must be created manually before volume will be bound
+  existingClaim: ""
+  mountPath: /data/teamcity_server/datadir
+  size: 5Gi
+  storageClass: ""
+  subPath: ""
+
 ingress:
   enabled: true
   # Used to create Ingress record (should used with service.type: ClusterIP).

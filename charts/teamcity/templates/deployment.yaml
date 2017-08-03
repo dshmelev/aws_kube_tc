@@ -20,17 +20,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.service.internalPort }}
-              #          livenessProbe:
-              #            initialDelaySeconds: 120
-              #            httpGet:
-              #              path: /
-              #              port: {{ .Values.service.internalPort }}
-              #          readinessProbe:
-              #            initialDelaySeconds: 120
-              #            httpGet:
-              #              path: /
-              #              port: {{ .Values.service.internalPort }}
+            - containerPort: 8111
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
@@ -39,5 +29,9 @@ spec:
             readOnly: false
       volumes:
       - name: data
-        hostPath:
-          path: /data/teamcity
+      {{- if .Values.persistentVolume.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "fullname" . }}{{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}

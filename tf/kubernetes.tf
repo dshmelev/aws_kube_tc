@@ -197,7 +197,7 @@ resource "aws_launch_configuration" "master-us-west-2a-masters-k8s-dshmelev-net"
 resource "aws_launch_configuration" "nodes-k8s-dshmelev-net" {
   name_prefix                 = "nodes.k8s.dshmelev.net-"
   image_id                    = "ami-ac58c0cc"
-  instance_type               = "t2.medium"
+  instance_type               = "t2.small"
   key_name                    = "${aws_key_pair.kubernetes-k8s-dshmelev-net-0a3bb97b55cb3871af607ed429d1a02e.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.nodes-k8s-dshmelev-net.id}"
   security_groups             = ["${aws_security_group.nodes-k8s-dshmelev-net.id}"]

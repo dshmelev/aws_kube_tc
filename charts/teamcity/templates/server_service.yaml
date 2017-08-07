@@ -8,12 +8,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.server.service.type }}
   ports:
-    - port: {{ .Values.service.servicePort }}
+    - port: {{ .Values.server.service.servicePort }}
       targetPort: 8111
       protocol: TCP
-      name: {{ .Values.service.name }}
+      name: {{ .Values.server.service.name }}
   selector:
     app: {{ template "name" . }}
+    component: {{ .Values.server.name }}
     release: {{ .Release.Name }}

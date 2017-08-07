@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "agent.fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    component: {{ .Values.agent.name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.agent.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        component: {{ .Values.agent.name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-{{ .Values.agent.name }}
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          ports:
+            - containerPort: 8111
+          env:
+            - name: SERVER_URL
+              value: "{{ template "name" . }}:{{ .Values.server.service.servicePort }}"
+
+          resources:
+{{ toYaml .Values.agent.resources | indent 12 }}

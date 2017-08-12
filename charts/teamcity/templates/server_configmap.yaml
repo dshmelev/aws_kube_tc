@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}
+data:
+  database.properties: |-
+    connectionUrl=jdbc\:hsqldb\:file\:$TEAMCITY_SYSTEM_PATH/buildserver
+  database.hsqldb.properties.dist: |-
+    # This is a sample file for configuring TeamCity to use an internal database.
+    # To make it effective, copy it to the "database.properties" file and modify the settings
+    # according to your environment.
+    # Do not modify this file, it will be overwritten on the TeamCity server start-up.
+    # See documentation at https://confluence.jetbrains.com/display/TCD10/Setting+up+an+External+Database
+    # Database: HSQLDB (HyperSonic) version 2.x
+    connectionUrl=jdbc:hsqldb:file:$TEAMCITY_SYSTEM_PATH/buildserver
+    # The maximum number of connections TeamCity can open with this database.
+    maxConnections=50
+  download_plugins.sh: |-
+    {{- if .Values.server.plugins }}
+    {{- range $key, $val := .Values.server.plugins }}
+    wget -c {{ $val }} -O /plugins/{{ $key }}
+    {{- end }}
+    {{- end }}
+
+

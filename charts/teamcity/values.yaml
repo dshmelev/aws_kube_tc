@@ -4,6 +4,8 @@
 server:
   name: tc-server
   replicaCount: 1
+  plugins:
+    teamcity-jmx-plugin.zip: https://bintray.com/rodm/teamcity-plugins/download_file?file_path=com%2Fgithub%2Frodm%2Fteamcity-jmx-plugin%2F1.1-b42%2Fteamcity-jmx-plugin-1.1-b42.zip
   image:
     repository: jetbrains/teamcity-server
     tag: latest

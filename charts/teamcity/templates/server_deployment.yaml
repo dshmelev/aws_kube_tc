@@ -16,7 +16,20 @@ spec:
         app: {{ template "name" . }}
         component: {{ .Values.server.name }}
         release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/server_configmap.yaml") . | sha256sum }}
     spec:
+      initContainers:
+        - name: download-plugins
+          image: busybox
+          command:
+            - "/download_plugins.sh"
+          volumeMounts:
+            - name: plugins
+              mountPath: /plugins
+            - name: config
+              mountPath: /download_plugins.sh
+              subPath: download_plugins.sh
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
@@ -29,7 +42,23 @@ spec:
           - name: data
             mountPath: /data/teamcity_server/datadir
             readOnly: false
+          - name: config
+            mountPath: /data/teamcity_server/datadir/config/database.properties
+            subPath: database.properties
+            readOnly: true
+          - name: config
+            mountPath: /data/teamcity_server/datadir/config/database.hsqldb.properties.dist
+            subPath: database.hsqldb.properties.dist
+            readOnly: true
+          - name: plugins
+            mountPath: /data/teamcity_server/datadir/plugins
+            readOnly: false
       volumes:
+      - name: plugins
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: {{ template "fullname" . }}
       - name: data
       {{- if .Values.server.persistentVolume.enabled }}
         persistentVolumeClaim:

@@ -31,9 +31,22 @@ spec:
               mountPath: /download_plugins.sh
               subPath: download_plugins.sh
       containers:
+        - name: {{ .Chart.Name }}-exporter
+          image: sscaling/jmx-prometheus-exporter:0.10
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5556
+          volumeMounts:
+            - name: config
+              mountPath: /opt/jmx_exporter/config.yml
+              subPath: jmx_exporter.yml
+              readOnly: true
         - name: {{ .Chart.Name }}
           image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.server.image.pullPolicy }}
+          env:
+            - name: TEAMCITY_SERVER_OPTS
+              value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8117 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
           ports:
             - containerPort: 8111
           resources:

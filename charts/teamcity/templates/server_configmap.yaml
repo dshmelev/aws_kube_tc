@@ -21,5 +21,10 @@ data:
     wget -c {{ $val }} -O /plugins/{{ $key }}
     {{- end }}
     {{- end }}
-
-
+  jmx_exporter.yml: |-
+    ---
+    startDelaySeconds: 0
+    jmxUrl: service:jmx:rmi:///jndi/rmi://localhost:8117/jmxrmi
+    ssl: false
+    lowercaseOutputName: false
+    lowercaseOutputLabelNames: false

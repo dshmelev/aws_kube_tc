@@ -23,6 +23,7 @@ spec:
         - name: download-plugins
           image: busybox
           command:
+            - "sh"
             - "/download_plugins.sh"
           volumeMounts:
             - name: plugins
